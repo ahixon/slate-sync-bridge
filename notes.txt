@@ -1,9 +1,13 @@
 - slate doc -> automerge doc (init)
+  DONE?
+
 - all slate operations -> apply to automerge doc (onchange)
 - automerge doc -> slate doc (render is just this)
 
 invariant:
 toSlate(doOp(slateOp, toAutomerge(value)) = doOp(value)
+
+- later: copy keys from one data structure to the other
 
 ================================================================
 

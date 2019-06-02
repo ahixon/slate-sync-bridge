@@ -4,6 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
+    "@types/slate": "^0.44.8",
     "immutable": "^4.0.0-rc.12",
     "slate": "^0.47.3",
     "typescript": "3.5.1"
@@ -39,7 +40,6 @@
     "eslint": "^5.16.0",
     "jest": "^24.8.0",
     "react": "^16.8.6",
-    "slate-dev-test-utils": "^0.0.1",
     "slate-hyperscript": "^0.13.3"
   }
 }
