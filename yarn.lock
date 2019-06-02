@@ -8563,6 +8563,11 @@ slash@^2.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
   integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
 
+slate-dev-test-utils@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/slate-dev-test-utils/-/slate-dev-test-utils-0.0.1.tgz#c6bb25ad5a7e08a8e307a23c651c83a238abb483"
+  integrity sha1-xrslrVp+CKjjB6I8ZRyDojirtIM=
+
 slate@^0.47.3:
   version "0.47.3"
   resolved "https://registry.yarnpkg.com/slate/-/slate-0.47.3.tgz#137f5b605bf2f9a0ba8fd800cf8f53b36a691eff"
