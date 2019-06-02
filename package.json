@@ -20,11 +20,15 @@
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}",
       "<rootDir>/test/**!(slate)/*.{js,jsx,ts,tsx}",
       "<rootDir>/test/slate/index.js"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!slate-dev-test-utils).+\\.js"
     ]
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "24.0.13",
     "@types/node": "12.0.4",
@@ -34,6 +38,7 @@
     "babel-jest": "^24.8.0",
     "eslint": "^5.16.0",
     "jest": "^24.8.0",
+    "react": "^16.8.6",
     "slate-dev-test-utils": "^0.0.1",
     "slate-hyperscript": "^0.13.3"
   }

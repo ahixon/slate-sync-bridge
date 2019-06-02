@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { fixtures } from 'slate-dev-test-utils'
+import { fixtures } from './helpers/fixtures'
 import { Editor, Value } from 'slate'
 
 const plugins = [

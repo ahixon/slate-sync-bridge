@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import h from '../../../helpers/h'
-import PathUtils from '../../../../src/utils/path-utils'
+import { PathUtils } from 'slate'
 import assert from 'assert'
 
 const pathA = PathUtils.create([0])
