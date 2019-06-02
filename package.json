@@ -137,6 +137,7 @@
     ]
   },
   "devDependencies": {
-    "slate-dev-test-utils": "^0.0.1"
+    "slate-dev-test-utils": "^0.0.1",
+    "slate-hyperscript": "^0.13.3"
   }
 }
