@@ -1,7 +1,7 @@
-import { NodeJSON } from './types/slate';
-import { SyncNode } from './types/sync';
+import { NodeJSON, DocumentJSON } from './types/slate';
+import { SyncNode, SyncDocument } from './types/sync';
 
-export const createNode = (node: NodeJSON): SyncNode => {
+const createNode = (node: NodeJSON): SyncNode => {
   if (!node.object) {
     throw new TypeError(`cannot create node with missing type`);
   }
@@ -28,4 +28,10 @@ export const createNode = (node: NodeJSON): SyncNode => {
         text: node.text ? Array.from(node.text) : undefined,
       }
   }
+}
+
+export const toSyncDocument = (node: DocumentJSON) => createNode(node);
+
+export const toSlateDocument = (node: SyncDocument): NodeJSON => {
+  return node;
 }
