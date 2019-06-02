@@ -1,0 +1,17 @@
+- slate doc -> automerge doc (init)
+- all slate operations -> apply to automerge doc (onchange)
+- automerge doc -> slate doc (render is just this)
+
+invariant:
+toSlate(doOp(slateOp, toAutomerge(value)) = doOp(value)
+
+================================================================
+
+for cursor positions:
+- emit over network connection
+- local one we keep in component state, and apply manually to Value
+- will remap *local selection only* based on automerge diff
+  PROVIDED we can get the parent of a change, otherwise
+  may need to pass path... :/
+
+- this would end up being broadcast and received by other clients
