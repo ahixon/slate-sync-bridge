@@ -21,8 +21,8 @@ export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocum
     case 'insert_node':
       return insertNode(doc, op);
     
-    // case 'move_node':
-    //   return moveNode(doc, op);
+    case 'move_node':
+      return moveNode(doc, op);
 
     case 'remove_node':
       return removeNode(doc, op);

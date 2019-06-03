@@ -40,7 +40,7 @@ export type SyncOperation =
   | SyncInsertTextOperation
   | SyncRemoveTextOperation
   | SyncInsertNodeOperation
-  // | SyncMoveNodeOperation;
+  | SyncMoveNodeOperation
   | SyncRemoveNodeOperation;
 
 const toNumberPath = (path: Path | number[]): number[] => {
@@ -82,13 +82,13 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       path: toNumberPath(op.path),
       node: createSyncNode(op.node.toJSON() as NodeJSON)
     };
-  // } else if (op.type === "move_node") {
-  //   return {
-  //     type: op.type,
+  } else if (op.type === "move_node") {
+    return {
+      type: op.type,
 
-  //     path: toNumberPath(op.path),
-  //     newPath: toNumberPath(op.newPath)
-  //   };
+      path: toNumberPath(op.path),
+      newPath: toNumberPath(op.newPath)
+    };
   } else if (op.type === 'remove_node') {
     return {
       type: op.type,

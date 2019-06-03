@@ -16,6 +16,18 @@ export const insertNode = (doc: SyncDocument, op: SyncInsertNodeOperation): Sync
 }
 
 export const moveNode = (doc: SyncDocument, op: SyncMoveNodeOperation): SyncDocument => {
+  const srcIndex = op.path[op.path.length - 1];
+  const srcParent = walk(doc, op.path.slice(0, op.path.length - 1));
+
+  const destIndex = op.newPath[op.newPath.length - 1];
+  const destParent = walk(doc, op.newPath.slice(0, op.newPath.length - 1));
+
+  if (srcParent.object === 'text' || destParent.object === 'text') {
+    throw new TypeError('cannot move node as child of a text node');
+  }
+
+  destParent.nodes!.splice(destIndex, 0, ...srcParent.nodes!.splice(srcIndex, 1));
+
   return doc;
 }
 
