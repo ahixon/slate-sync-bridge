@@ -2,7 +2,7 @@ import assert from 'assert'
 import { fixtures } from './helpers/fixtures'
 import { Editor, Value } from 'slate'
 import { applyOperation } from '../../src';
-import { toSyncDocument, toSlateDocument } from '../../src/nodes';
+import { toSyncDocument, toSlateDocument } from '../../src/node-convert';
 
 const plugins = [
   {

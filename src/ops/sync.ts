@@ -1,7 +1,6 @@
 import { Operation, Path, MarkJSON } from "slate";
-import Immutable, { List } from "immutable";
 import { SyncMark, SyncNode } from "../types/sync";
-import { createSyncNode } from "../nodes";
+import { createSyncNode } from "../node-convert/sync";
 import { NodeJSON } from "../types/slate";
 
 export type SyncInsertTextOperation = {
@@ -123,6 +122,13 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
 
       path: toNumberPath(op.path),
     }
+  // } else if (op.type === 'add_mark') {
+  //   return {
+  //     op: op.type,
+
+  //     path: op.path,
+  //     mark: op.mark
+  //   }
   } else if (op.type === "set_selection" || op.type === "set_value") {
     // Value specific operations
     return null;
