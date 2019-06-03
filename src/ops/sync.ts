@@ -36,12 +36,20 @@ export type SyncRemoveNodeOperation = {
   path: number[];
 }
 
+export type SyncSplitNodeOperation = {
+  type: "split_node";
+  path: number[];
+  position: number;
+  properties: {};
+}
+
 export type SyncOperation =
   | SyncInsertTextOperation
   | SyncRemoveTextOperation
   | SyncInsertNodeOperation
   | SyncMoveNodeOperation
-  | SyncRemoveNodeOperation;
+  | SyncRemoveNodeOperation
+  | SyncSplitNodeOperation
 
 const toNumberPath = (path: Path | number[]): number[] => {
   if (typeof path === "string") {
@@ -94,6 +102,14 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       type: op.type,
 
       path: toNumberPath(op.path)
+    }
+  } else if (op.type === 'split_node') {
+    return {
+      type: op.type,
+
+      path: toNumberPath(op.path),
+      position: op.position,
+      properties: op.properties
     }
   } else if (op.type === "set_selection" || op.type === "set_value") {
     // Value specific operations
