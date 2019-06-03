@@ -1,17 +1,17 @@
 import { DocumentJSON, BlockJSON, InlineJSON, TextJSON, MarkJSON } from "./slate";
 
-// drop key for now since that concerns local state
-export type CommonJSONFields = 'object' | 'data';
 export type SyncTreeNode = {
+  object: string;
   nodes?: SyncNode[];
 }
 
-export type SyncDocument = Pick<DocumentJSON, CommonJSONFields> & SyncTreeNode;
-export type SyncBlock = Pick<BlockJSON, CommonJSONFields | 'type'> & SyncTreeNode;
-export type SyncInline = Pick<InlineJSON, CommonJSONFields | 'type'> & SyncTreeNode;
-export type SyncText = Pick<TextJSON, 'object'> & {
-  text?: Array<string>
-  marks?: Array<SyncMark>
+export type SyncDocument = Pick<DocumentJSON, 'object' | 'data'> & SyncTreeNode;
+export type SyncBlock = Pick<BlockJSON, 'object' | 'data' | 'type'> & SyncTreeNode;
+export type SyncInline = Pick<InlineJSON, 'object' | 'data' | 'type'> & SyncTreeNode;
+export type SyncText = {
+  object: 'text';
+  text: Array<string>;
+  marks: Array<SyncMark>;
 }
 
 export type SyncMark = MarkJSON;

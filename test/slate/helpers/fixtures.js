@@ -42,7 +42,7 @@ export const fixtures = (...args) => {
         const name = basename(file, extname(file))
 
         const module = require(p)
-        const i = module.skip ? it.skip : it;
+        const i = module.skip ? it.skip : module.only ? it.only : it;
         
         i(name, function() {
           fn({ name, path, module })

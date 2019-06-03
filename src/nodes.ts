@@ -25,7 +25,8 @@ const createSyncNode = (node: NodeJSON): SyncNode => {
     case 'text':
       return {
         ...node,
-        text: node.text ? Array.from(node.text) : undefined,
+        text: node.text ? Array.from(node.text) : [],
+        marks: node.marks || []
       }
   }
 }
@@ -56,7 +57,7 @@ const createSlateNode = (node: SyncNode): NodeJSON  => {
     case 'text':
       return {
         ...node,
-        text: node.text ? node.text.join('') : undefined,
+        text: node.text.join(''),
       }
   }
 }
