@@ -58,11 +58,11 @@ describe('slate integration', () => {
       fn(editor)
       
       // re-apply the operations from the test
-      console.log('op', editor.operations.toJS());
       const actualSyncDoc = editor.operations.reduce((doc, op) => applyOperation(doc, op), inputSyncDoc);
       const actualDoc = toSlateDocument(actualSyncDoc)
 
-      const expectedDoc = output.document.toJSON()
+      editor.setValue(output);
+      const expectedDoc = editor.value.document.toJSON()
       assert.deepEqual(actualDoc, expectedDoc)
     })
   });

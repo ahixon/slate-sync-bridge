@@ -1,7 +1,7 @@
 import { NodeJSON, DocumentJSON } from './types/slate';
 import { SyncNode, SyncDocument } from './types/sync';
 
-const createSyncNode = (node: NodeJSON): SyncNode => {
+export const createSyncNode = (node: NodeJSON): SyncNode => {
   if (!node.object) {
     throw new TypeError(`cannot create node with missing type`);
   }

@@ -1,6 +1,8 @@
 import { Operation, InsertTextOperation, Path, MarkJSON } from "slate";
 import Immutable, { List } from 'immutable';
-import { SyncMark } from "../types/sync";
+import { SyncMark, SyncNode } from "../types/sync";
+import { createSyncNode } from "../nodes";
+import { NodeJSON } from "../types/slate";
 
 export type SyncInsertTextOperation = {
   type: 'insert_text';
@@ -8,7 +10,6 @@ export type SyncInsertTextOperation = {
   offset: number;
   text: string;
   marks: SyncMark[];
-  data: object;
 };
 
 export type SyncRemoveTextOperation = {
@@ -16,14 +17,20 @@ export type SyncRemoveTextOperation = {
   path: number[];
   offset: number;
   text: string;
-  data: object;
 }
 
-export type SyncOperation = SyncInsertTextOperation | SyncRemoveTextOperation;
+export type SyncInsertNodeOperation = {
+  type: 'insert_node';
+  path: number[];
+  node: SyncNode;
+}
+
+export type SyncOperation = SyncInsertTextOperation | SyncRemoveTextOperation | SyncInsertNodeOperation;
 
 const toNumberPath = (path: Path): number[] => {
   if (typeof path === 'string') {
-    return [Number(path)];
+    // return [Number(path)];
+    throw new TypeError('cannot handle key-based paths');
   } else if (typeof path === 'number') {
     return [path]
   } else if (Array.isArray(path)) {
@@ -38,19 +45,26 @@ export const toSyncOp = (op: Operation): SyncOperation => {
   if (op.type === 'insert_text') {
     return {
       type: op.type,
+
       offset: op.offset,
       text: op.text,
       path: toNumberPath(op.path),
       marks: op.marks ? op.marks.map(mark => mark.toJSON() as MarkJSON) : [],
-      data: op.data ? op.data.toJS() : {}
     }
   } else if (op.type === 'remove_text') {
     return {
       type: op.type,
+
       offset: op.offset,
       text: op.text,
       path: toNumberPath(op.path),
-      data: op.data ? op.data.toJS() : {}
+    }
+  } else if (op.type === 'insert_node') {
+    return {
+      type: op.type,
+
+      path: toNumberPath(op.path),
+      node: createSyncNode(op.node.toJSON() as NodeJSON)
     }
   }
 
