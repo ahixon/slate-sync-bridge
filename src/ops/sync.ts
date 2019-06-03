@@ -66,7 +66,8 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       path: toNumberPath(op.path),
       node: createSyncNode(op.node.toJSON() as NodeJSON)
     }
-  } else if (op.type === 'set_selection') {
+  } else if (op.type === 'set_selection' || op.type === 'set_value') {
+    // Value specific operations
     return null;
   }
 
