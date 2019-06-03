@@ -1,6 +1,8 @@
 import assert from 'assert'
 import { fixtures } from './helpers/fixtures'
 import { Editor, Value } from 'slate'
+import { applyOperation } from '../../src';
+import { toSyncDocument, toSlateDocument } from '../../src/nodes';
 
 const plugins = [
   {
@@ -25,43 +27,80 @@ const plugins = [
 ]
 
 describe('slate integration', () => {
-  fixtures(__dirname, 'operations', ({ module }) => {
-    const { input, output } = module
-    const operations = module.default
-    const editor = new Editor({ plugins })
+  describe('sync-bridge', () => {
+    fixtures(__dirname, 'operations', ({ module }) => {
+      const { input, output } = module
+      const operations = module.default
 
-    const opts = {
-      preserveSelection: true,
-      preserveDecorations: true,
-    }
+      const inputSyncDoc = toSyncDocument(input.document.toJSON())
+      const actualSyncDoc = operations.reduce((doc, op) => applyOperation(doc, op), inputSyncDoc);
 
-    editor.setValue(input)
-    operations.forEach(op => editor.applyOperation(op))
+      // check our rep matched
+      const expectedDoc = output.document.toJSON();
+      const actualDoc = toSlateDocument(actualSyncDoc);
+      assert.deepEqual(expectedDoc, actualDoc);
+    })
 
-    const actual = editor.value.toJSON(opts)
+    fixtures(__dirname, 'commands', ({ module }) => {
+      const { input, output, options = {}, plugins: module_plugins } = module
+      const fn = module.default
+      const editor = new Editor({
+        plugins: module_plugins ? plugins.concat(module_plugins) : plugins,
+      })
+      const opts = { preserveSelection: true, ...options }
+      if (Object.keys(options).length) {
+        throw new TypeError('bad test, cannot use options yet');
+      }
 
-    editor.setValue(output)
-    const expected = editor.value.toJSON(opts)
-    assert.deepEqual(actual, expected)
-  })
+      const inputSyncDoc = toSyncDocument(input.document.toJSON());
+      
+      editor.setValue(input)
+      fn(editor)
+      
+      // re-apply the operations from the test
+      const actualSyncDoc = editor.operations.reduce((doc, op) => applyOperation(doc, op), inputSyncDoc);
+      const actualDoc = toSlateDocument(actualSyncDoc)
 
-  // The hyperscript editor has the schema, but the test
-  // editor doesn't! It needs to live in the tests instead.
+      const expectedDoc = output.document.toJSON()
+      assert.deepEqual(actualDoc, expectedDoc)
+    })
+  });
 
-  // fixtures(__dirname, 'commands', ({ module }) => {
-  //   const { input, output, options = {}, plugins: module_plugins } = module
-  //   const fn = module.default
-  //   const editor = new Editor({
-  //     plugins: module_plugins ? plugins.concat(module_plugins) : plugins,
+  // describe.skip('slate', () => {
+  //   fixtures(__dirname, 'operations', ({ module }) => {
+  //     const { input, output } = module
+  //     const operations = module.default
+  //     const editor = new Editor({ plugins })
+
+  //     const opts = {
+  //       preserveSelection: true,
+  //       preserveDecorations: true,
+  //     }
+
+  //     editor.setValue(input)
+  //     operations.forEach(op => editor.applyOperation(op))
+  //     const actual = editor.value.toJSON(opts)
+
+  //     editor.setValue(output)
+  //     const expected = editor.value.toJSON(opts)
+  //     assert.deepEqual(actual, expected)
   //   })
-  //   const opts = { preserveSelection: true, ...options }
 
-  //   editor.setValue(input)
-  //   fn(editor)
-  //   const actual = editor.value.toJSON(opts)
+  //   fixtures(__dirname, 'commands', ({ module }) => {
+  //     const { input, output, options = {}, plugins: module_plugins } = module
+  //     const fn = module.default
+  //     const editor = new Editor({
+  //       plugins: module_plugins ? plugins.concat(module_plugins) : plugins,
+  //     })
+  //     const opts = { preserveSelection: true, ...options }
 
-  //   editor.setValue(output)
-  //   const expected = editor.value.toJSON(opts)
-  //   assert.deepEqual(actual, expected)
-  // })
+  //     editor.setValue(input)
+  //     fn(editor)
+  //     const actual = editor.value.toJSON(opts)
+
+  //     editor.setValue(output)
+  //     const expected = editor.value.toJSON(opts)
+  //     assert.deepEqual(actual, expected)
+  //   })
+  // });
 })

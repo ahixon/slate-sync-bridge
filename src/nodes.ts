@@ -1,7 +1,7 @@
 import { NodeJSON, DocumentJSON } from './types/slate';
 import { SyncNode, SyncDocument } from './types/sync';
 
-const createNode = (node: NodeJSON): SyncNode => {
+const createSyncNode = (node: NodeJSON): SyncNode => {
   if (!node.object) {
     throw new TypeError(`cannot create node with missing type`);
   }
@@ -10,17 +10,17 @@ const createNode = (node: NodeJSON): SyncNode => {
     case 'document':
       return {
         ...node,
-        nodes: node.nodes && node.nodes.map(createNode)
+        nodes: node.nodes && node.nodes.map(createSyncNode)
       }
     case 'block':
       return {
         ...node,
-        nodes: node.nodes && node.nodes.map(createNode)
+        nodes: node.nodes && node.nodes.map(createSyncNode)
       }
     case 'inline':
       return {
         ...node,
-        nodes: node.nodes && node.nodes.map(createNode)
+        nodes: node.nodes && node.nodes.map(createSyncNode)
       }
     case 'text':
       return {
@@ -30,8 +30,35 @@ const createNode = (node: NodeJSON): SyncNode => {
   }
 }
 
-export const toSyncDocument = (node: DocumentJSON) => createNode(node);
+export const toSyncDocument = (node: DocumentJSON) => createSyncNode(node);
 
-export const toSlateDocument = (node: SyncDocument): NodeJSON => {
-  return node;
+const createSlateNode = (node: SyncNode): NodeJSON  => {
+  if (!node.object) {
+    throw new TypeError(`cannot create node with missing type`);
+  }
+
+  switch(node.object) {
+    case 'document':
+      return {
+        ...node,
+        nodes: node.nodes && node.nodes.map(createSlateNode)
+      }
+    case 'block':
+      return {
+        ...node,
+        nodes: node.nodes && node.nodes.map(createSlateNode)
+      }
+    case 'inline':
+      return {
+        ...node,
+        nodes: node.nodes && node.nodes.map(createSlateNode)
+      }
+    case 'text':
+      return {
+        ...node,
+        text: node.text ? node.text.join('') : undefined,
+      }
+  }
 }
+
+export const toSlateDocument = (node: SyncDocument) => createSlateNode(node);
