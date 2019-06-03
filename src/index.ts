@@ -1,2 +1,2 @@
-export { applyOperation } from './ops';
+export { applyOperation } from './apply';
 export { toSyncDocument, toSlateDocument } from './node-convert';

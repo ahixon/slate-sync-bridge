@@ -1,6 +1,6 @@
 import { walk } from "./path";
 import { SyncDocument } from "../types/sync";
-import { SyncInsertTextOperation, SyncRemoveTextOperation } from "./sync";
+import { SyncInsertTextOperation, SyncRemoveTextOperation } from "../types/ops";
 
 export const insertText = (doc: SyncDocument, op: SyncInsertTextOperation): SyncDocument => {
   const node = walk(doc, op.path);

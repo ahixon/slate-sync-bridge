@@ -1,73 +1,8 @@
 import { Operation, Path, MarkJSON } from "slate";
-import { SyncMark, SyncNode } from "../types/sync";
 import { createSyncNode } from "../node-convert/sync";
 import { NodeJSON } from "../types/slate";
-
-export type SyncInsertTextOperation = {
-  type: "insert_text";
-  path: number[];
-  offset: number;
-  text: string;
-  marks: SyncMark[];
-};
-
-export type SyncRemoveTextOperation = {
-  type: "remove_text";
-  path: number[];
-  offset: number;
-  text: string;
-};
-
-export type SyncInsertNodeOperation = {
-  type: "insert_node";
-  path: number[];
-  node: SyncNode;
-};
-
-export type SyncMoveNodeOperation = {
-  type: "move_node";
-  path: number[];
-  newPath: number[];
-};
-
-export type SyncRemoveNodeOperation = {
-  type: "remove_node";
-  path: number[];
-}
-
-export type SyncSplitNodeOperation = {
-  type: "split_node";
-  path: number[];
-  position: number;
-  properties: {};
-}
-
-export type SyncMergeNodeOperation = {
-  type: "merge_node";
-  path: number[];
-}
-
-export type SyncOperation =
-  | SyncInsertTextOperation
-  | SyncRemoveTextOperation
-  | SyncInsertNodeOperation
-  | SyncMoveNodeOperation
-  | SyncRemoveNodeOperation
-  | SyncSplitNodeOperation
-  | SyncMergeNodeOperation
-
-const toNumberPath = (path: Path | number[]): number[] => {
-  if (typeof path === "string") {
-    // return [Number(path)];
-    throw new TypeError("cannot handle key-based paths");
-  } else if (typeof path === "number") {
-    return [path];
-  } else if (Array.isArray(path)) {
-    return path;
-  } else {
-    return path.toJS();
-  }
-};
+import { SyncOperation } from "../types/ops";
+import { toNumberPath } from "./path";
 
 // DO NOT spread objects here; source is a Immutable Record
 export const toSyncOp = (op: Operation): SyncOperation | null => {

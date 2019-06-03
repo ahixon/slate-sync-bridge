@@ -1,5 +1,5 @@
 import { SyncDocument, SyncText, SyncNode, SyncTreeNode } from "../types/sync";
-import { SyncInsertNodeOperation, SyncMoveNodeOperation, SyncRemoveNodeOperation, SyncSplitNodeOperation, SyncMergeNodeOperation } from "./sync";
+import { SyncInsertNodeOperation, SyncMoveNodeOperation, SyncRemoveNodeOperation, SyncSplitNodeOperation, SyncMergeNodeOperation } from "../types/ops";
 import { walk, getAncestor, incrementPath, decrementPath } from "./path";
 
 export const insertNode = (doc: SyncDocument, op: SyncInsertNodeOperation): SyncDocument => {

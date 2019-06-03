@@ -1,6 +1,6 @@
 import { Operation } from "slate";
 import { SyncDocument } from "./types/sync";
-import { toSyncOp } from "./ops/sync";
+import { toSyncOp } from "./ops/convert";
 import { insertText, removeText } from "./ops/text";
 import { insertNode, moveNode, removeNode, splitNode, mergeNode } from "./ops/node";
 

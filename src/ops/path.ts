@@ -1,4 +1,5 @@
 import { SyncTreeNode, SyncNode, SyncDocument } from "../types/sync";
+import { Path } from "slate";
 
 export const isTreeNode = (node: SyncNode): node is SyncTreeNode => {
   return (<SyncTreeNode>node).object !== 'text';
@@ -39,6 +40,19 @@ export const decrementPath = (path: number[]) => {
   if (prevIdx < 0) {
     throw new TypeError(`node at path ${path} has no sibling before it`);
   }
-  
+
   return parentPath.concat([prevIdx]);
 }
+
+export const toNumberPath = (path: Path | number[]): number[] => {
+  if (typeof path === "string") {
+    // return [Number(path)];
+    throw new TypeError("cannot handle key-based paths");
+  } else if (typeof path === "number") {
+    return [path];
+  } else if (Array.isArray(path)) {
+    return path;
+  } else {
+    return path.toJS();
+  }
+};
