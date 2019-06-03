@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@types/slate": "^0.44.8",
+    "fast-deep-equal": "^2.0.1",
     "immutable": "^4.0.0-rc.12",
     "slate": "^0.47.3",
     "typescript": "3.5.1"

@@ -3,6 +3,7 @@ import { SyncDocument } from "./types/sync";
 import { toSyncOp } from "./ops/convert";
 import { insertText, removeText } from "./ops/text";
 import { insertNode, moveNode, removeNode, splitNode, mergeNode } from "./ops/node";
+import { addMark } from "./ops/mark";
 
 export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocument => {
   const op = toSyncOp(slateOp);
@@ -32,5 +33,8 @@ export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocum
 
     case 'merge_node':
       return mergeNode(doc, op);
+    
+    case 'add_mark':
+      return addMark(doc, op);
   }
 }
