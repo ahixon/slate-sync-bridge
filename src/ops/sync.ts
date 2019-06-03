@@ -43,6 +43,11 @@ export type SyncSplitNodeOperation = {
   properties: {};
 }
 
+export type SyncMergeNodeOperation = {
+  type: "merge_node";
+  path: number[];
+}
+
 export type SyncOperation =
   | SyncInsertTextOperation
   | SyncRemoveTextOperation
@@ -50,6 +55,7 @@ export type SyncOperation =
   | SyncMoveNodeOperation
   | SyncRemoveNodeOperation
   | SyncSplitNodeOperation
+  | SyncMergeNodeOperation
 
 const toNumberPath = (path: Path | number[]): number[] => {
   if (typeof path === "string") {
@@ -110,6 +116,12 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       path: toNumberPath(op.path),
       position: op.position,
       properties: op.properties
+    }
+  } else if (op.type  ===  'merge_node') {
+    return {
+      type: op.type,
+
+      path: toNumberPath(op.path),
     }
   } else if (op.type === "set_selection" || op.type === "set_value") {
     // Value specific operations

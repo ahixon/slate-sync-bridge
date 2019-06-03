@@ -2,7 +2,7 @@ import { Operation } from "slate";
 import { SyncDocument } from "./types/sync";
 import { toSyncOp } from "./ops/sync";
 import { insertText, removeText } from "./ops/text";
-import { insertNode, moveNode, removeNode, splitNode } from "./ops/node";
+import { insertNode, moveNode, removeNode, splitNode, mergeNode } from "./ops/node";
 
 export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocument => {
   const op = toSyncOp(slateOp);
@@ -29,5 +29,8 @@ export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocum
     
     case 'split_node':
       return splitNode(doc, op);
+
+    case 'merge_node':
+      return mergeNode(doc, op);
   }
 }

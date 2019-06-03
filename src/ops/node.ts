@@ -1,6 +1,6 @@
-import { SyncDocument, SyncText, SyncNode } from "../types/sync";
-import { SyncInsertNodeOperation, SyncMoveNodeOperation, SyncRemoveNodeOperation, SyncSplitNodeOperation } from "./sync";
-import { walk, getAncestor, incrementPath } from "./path";
+import { SyncDocument, SyncText, SyncNode, SyncTreeNode } from "../types/sync";
+import { SyncInsertNodeOperation, SyncMoveNodeOperation, SyncRemoveNodeOperation, SyncSplitNodeOperation, SyncMergeNodeOperation } from "./sync";
+import { walk, getAncestor, incrementPath, decrementPath } from "./path";
 
 export const insertNode = (doc: SyncDocument, op: SyncInsertNodeOperation): SyncDocument => {
   const [parentNode, index] = getAncestor(doc, op.path)
@@ -60,5 +60,29 @@ export const splitNode = (doc: SyncDocument, op: SyncSplitNodeOperation): SyncDo
     type: 'insert_node',
     path: incrementPath(op.path),
     node: splitNode,
+  })
+}
+
+export const mergeNode = (doc: SyncDocument, op: SyncMergeNodeOperation): SyncDocument => {
+  const node = walk(doc, op.path);
+  const prevNode = walk(doc, decrementPath(op.path));
+
+  if (node.object !== prevNode.object) {
+    throw new TypeError(`cannot merge nodes of differing types ${node.object} and ${prevNode.object}`);
+  }
+
+  // fold node into prevNode
+  // FIXME: please don't cast here
+  if (prevNode.object === 'text') {
+    prevNode.text.push(...(node as SyncText).text);
+  } else {
+    if (prevNode.nodes && (node as SyncTreeNode).nodes) {
+      prevNode.nodes.push(...(node as SyncTreeNode).nodes!);
+    }
+  }
+
+  return removeNode(doc, {
+    type: 'remove_node',
+    path: op.path,
   })
 }

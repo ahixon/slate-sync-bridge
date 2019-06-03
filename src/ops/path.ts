@@ -32,3 +32,13 @@ export const incrementPath = (path: number[]) => {
   const [idx, parentPath] = ancestorPath(path);
   return parentPath.concat([idx + 1]);
 }
+
+export const decrementPath = (path: number[]) => {
+  const [idx, parentPath] = ancestorPath(path);
+  const prevIdx = idx - 1;
+  if (prevIdx < 0) {
+    throw new TypeError(`node at path ${path} has no sibling before it`);
+  }
+  
+  return parentPath.concat([prevIdx]);
+}
