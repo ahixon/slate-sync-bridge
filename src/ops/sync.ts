@@ -41,7 +41,7 @@ const toNumberPath = (path: Path): number[] => {
 }
 
 // DO NOT spread objects here; source is a Immutable Record
-export const toSyncOp = (op: Operation): SyncOperation => {
+export const toSyncOp = (op: Operation): SyncOperation | null => {
   if (op.type === 'insert_text') {
     return {
       type: op.type,
@@ -66,6 +66,8 @@ export const toSyncOp = (op: Operation): SyncOperation => {
       path: toNumberPath(op.path),
       node: createSyncNode(op.node.toJSON() as NodeJSON)
     }
+  } else if (op.type === 'set_selection') {
+    return null;
   }
 
   throw new TypeError(`cannot convert op ${JSON.stringify(op)} to sync op`);

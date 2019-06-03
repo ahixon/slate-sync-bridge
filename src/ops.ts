@@ -7,6 +7,10 @@ import { insertNode } from "./ops/node";
 export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocument => {
   const op = toSyncOp(slateOp);
 
+  if (!op) {
+    return doc;
+  }
+
   switch (op.type) {
     case 'insert_text':
       return insertText(doc, op);
