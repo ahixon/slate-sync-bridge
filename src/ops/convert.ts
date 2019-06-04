@@ -64,6 +64,12 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       path: toNumberPath(op.path),
       mark: op.mark.toJSON() as MarkJSON,
     }
+  } else if (op.type === 'remove_mark') {
+    return {
+      type: op.type,
+      path: toNumberPath(op.path),
+      mark: op.mark.toJSON() as MarkJSON
+    }
   } else if (op.type === "set_selection" || op.type === "set_value") {
     // Value specific operations
     return null;

@@ -50,6 +50,12 @@ export type SyncAddMarkOperation = {
   mark: SyncMark;
 }
 
+export type SyncRemoveMarkOperation = {
+  type: "remove_mark";
+  path: number[];
+  mark: SyncMark;
+}
+
 export type SyncOperation =
   | SyncInsertTextOperation
   | SyncRemoveTextOperation
@@ -59,3 +65,4 @@ export type SyncOperation =
   | SyncSplitNodeOperation
   | SyncMergeNodeOperation
   | SyncAddMarkOperation
+  | SyncRemoveMarkOperation
