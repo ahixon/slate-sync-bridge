@@ -19,7 +19,7 @@ export const removeText = (doc: SyncDocument, op: SyncRemoveTextOperation): Sync
     throw new TypeError('did not get text node at path');
   }
 
-  node.text.splice(op.offset, op.text.length);
+  node.text.splice(op.offset, Array.from(op.text).length);
 
   return doc;
 }
