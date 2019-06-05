@@ -1,6 +1,6 @@
 import assert from 'assert'
 import { fixtures } from './helpers/fixtures'
-import { Editor, Value } from 'slate'
+import { Editor } from 'slate'
 import { applyOperation } from '../../src';
 import { toSyncDocument, toSlateDocument } from '../../src/node-convert';
 
@@ -33,12 +33,15 @@ describe('slate integration', () => {
       const operations = module.default
 
       const inputSyncDoc = toSyncDocument(input.document.toJSON())
-      const actualSyncDoc = operations.reduce((doc, op) => applyOperation(doc, op), inputSyncDoc);
+      operations.forEach(op => {
+        applyOperation(inputSyncDoc, op)
+        // console.log(JSON.stringify(inputSyncDoc, null, 2));
+      });
 
       // check our rep matched
       const expectedDoc = output.document.toJSON();
-      const actualDoc = toSlateDocument(actualSyncDoc);
-      assert.deepEqual(expectedDoc, actualDoc);
+      const actualDoc = toSlateDocument(inputSyncDoc);
+      assert.deepEqual(actualDoc, expectedDoc);
     })
 
     fixtures(__dirname, 'commands', ({ module }) => {

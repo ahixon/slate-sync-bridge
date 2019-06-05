@@ -8,6 +8,7 @@ import {
   SyncSetNodeOperation
 } from "../types/ops";
 import { walk, getAncestor, incrementPath, decrementPath } from "./path";
+import Automerge from 'automerge';
 
 export const insertNode = (
   doc: SyncDocument,
@@ -65,7 +66,7 @@ export const splitNode = (
 ): SyncDocument => {
   const node = walk(doc, op.path);
 
-  let splitNode;
+  let splitNode: SyncNode;
   if (node.object === "text") {
     splitNode = {
       object: "text",
@@ -73,8 +74,16 @@ export const splitNode = (
       marks: Array.from(node.marks)
     } as SyncText;
   } else {
+    // @ts-ignore
     splitNode = {
-      ...node,
+      object: node.object,
+
+      // @ts-ignore
+      type: node.type,
+      data: {
+        ...node.data,
+      },
+
       nodes: node.nodes!.splice(op.position)
     };
   }
@@ -104,17 +113,34 @@ export const mergeNode = (
   // fold node into prevNode
   // FIXME: please don't cast here
   if (prevNode.object === "text") {
-    prevNode.text.push(...(node as SyncText).text);
+    // detach from parent
+    const text = (node as SyncText).text.splice(0, (node as SyncText).text.length);
+
+    // remove next node
+    removeNode(doc, {
+      type: "remove_node",
+      path: op.path
+    });
+
+    // add to previous node
+    prevNode.text.push(...text);
   } else {
-    if (prevNode.nodes && (node as SyncTreeNode).nodes) {
-      prevNode.nodes.push(...(node as SyncTreeNode).nodes!);
+    // detach from parent
+    const children = (node as SyncTreeNode).nodes!.splice(0, (node as SyncTreeNode).nodes!.length);
+
+    // remove old node
+    removeNode(doc, {
+      type: "remove_node",
+      path: op.path
+    });
+
+    // add to previous node
+    if (prevNode.nodes && children) {
+      prevNode.nodes.push(...children);
     }
   }
-
-  return removeNode(doc, {
-    type: "remove_node",
-    path: op.path
-  });
+  
+  return doc;
 };
 
 export const setNodeProperties = (

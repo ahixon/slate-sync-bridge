@@ -47,7 +47,7 @@ describe('slate integration', () => {
       // check our rep matched
       const expectedDoc = output.document.toJSON();
       const actualDoc = toSlateDocument(changedAutomergeDoc.doc);
-      assert.deepEqual(expectedDoc, actualDoc);
+      assert.deepEqual(actualDoc, expectedDoc);
     })
 
     fixtures(__dirname, 'commands', ({ module }) => {
