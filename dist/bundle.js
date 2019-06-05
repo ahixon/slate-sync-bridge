@@ -591,11 +591,18 @@ var splitNode = function (doc, op) {
         splitNode = {
             object: "text",
             text: node.text.splice(op.position),
-            marks: Array.from(node.marks)
+            marks: JSON.parse(JSON.stringify(node.marks))
         };
     }
     else {
-        splitNode = __assign({}, node, { nodes: node.nodes.splice(op.position) });
+        // @ts-ignore
+        splitNode = {
+            object: node.object,
+            // @ts-ignore
+            type: node.type,
+            data: JSON.parse(JSON.stringify(node.data)),
+            nodes: node.nodes.splice(op.position)
+        };
     }
     return insertNode(doc, {
         type: "insert_node",
@@ -613,17 +620,30 @@ var mergeNode = function (doc, op) {
     // fold node into prevNode
     // FIXME: please don't cast here
     if (prevNode.object === "text") {
-        (_a = prevNode.text).push.apply(_a, node.text);
+        // detach from parent
+        var text = node.text.splice(0, node.text.length);
+        // remove next node
+        removeNode(doc, {
+            type: "remove_node",
+            path: op.path
+        });
+        // add to previous node
+        (_a = prevNode.text).push.apply(_a, text);
     }
     else {
-        if (prevNode.nodes && node.nodes) {
-            (_b = prevNode.nodes).push.apply(_b, node.nodes);
+        // detach from parent
+        var children = node.nodes.splice(0, node.nodes.length);
+        // remove old node
+        removeNode(doc, {
+            type: "remove_node",
+            path: op.path
+        });
+        // add to previous node
+        if (prevNode.nodes && children) {
+            (_b = prevNode.nodes).push.apply(_b, children);
         }
     }
-    return removeNode(doc, {
-        type: "remove_node",
-        path: op.path
-    });
+    return doc;
 };
 var setNodeProperties = function (doc, op) {
     var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
