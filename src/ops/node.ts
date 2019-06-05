@@ -8,7 +8,6 @@ import {
   SyncSetNodeOperation
 } from "../types/ops";
 import { walk, getAncestor, incrementPath, decrementPath } from "./path";
-import Automerge from 'automerge';
 
 export const insertNode = (
   doc: SyncDocument,
@@ -70,8 +69,9 @@ export const splitNode = (
   if (node.object === "text") {
     splitNode = {
       object: "text",
+
       text: node.text.splice(op.position),
-      marks: Array.from(node.marks)
+      marks: JSON.parse(JSON.stringify(node.marks))
     } as SyncText;
   } else {
     // @ts-ignore
@@ -80,10 +80,8 @@ export const splitNode = (
 
       // @ts-ignore
       type: node.type,
-      data: {
-        ...node.data,
-      },
 
+      data: JSON.parse(JSON.stringify(node.data)),
       nodes: node.nodes!.splice(op.position)
     };
   }

@@ -8,8 +8,6 @@ import { addMark, removeMark, setMark } from "./ops/mark";
 export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocument => {
   const op = toSyncOp(slateOp);
 
-  // console.log(op);
-
   if (!op) {
     return doc;
   }
