@@ -17,6 +17,7 @@
     "typescript": "^3.5.1"
   },
   "scripts": {
+    "build": "webpack",
     "test": "yarn jest"
   },
   "eslintConfig": {
