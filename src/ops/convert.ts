@@ -12,6 +12,7 @@ const toSyncMarkProperties = (props: MarkProperties) => {
   }
 
   if (props.data) {
+    // @ts-ignore
     markProps.data = props.data && (props.data.toJSON ? props.data.toJSON() : props.data)
   }
 

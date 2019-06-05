@@ -1,6 +1,7 @@
 import { SyncTreeNode, SyncNode, SyncDocument } from "../types/sync";
 import { Path } from "slate";
 
+// @ts-ignore
 export const isTreeNode = (node: SyncNode): node is SyncTreeNode => {
   return (<SyncTreeNode>node).object !== 'text';
 }
