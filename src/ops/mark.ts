@@ -2,7 +2,6 @@ import { SyncDocument } from "../types/sync";
 import { SyncAddMarkOperation, SyncRemoveMarkOperation, SyncSetMarkOperation } from "../types/ops";
 import { walk } from "./path";
 import equal from 'fast-deep-equal';
-import { MarkJSON } from "../types/slate";
 
 export const addMark = (doc: SyncDocument, op: SyncAddMarkOperation): SyncDocument => {
   const node = walk(doc, op.path);

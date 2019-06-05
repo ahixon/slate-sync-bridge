@@ -1,5 +1,4 @@
 import { SyncMark, SyncNode } from "../types/sync";
-import { MarkProperties } from "slate";
 
 export type SyncInsertTextOperation = {
   type: "insert_text";

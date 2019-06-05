@@ -1,4 +1,4 @@
-import { Operation, Path, MarkJSON, MarkProperties } from "slate";
+import { Operation, MarkJSON, MarkProperties } from "slate";
 import { createSyncNode } from "../node-convert/sync";
 import { NodeJSON } from "../types/slate";
 import { SyncOperation, SyncMarkProperties } from "../types/ops";
