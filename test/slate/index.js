@@ -48,9 +48,9 @@ describe('slate integration', () => {
         plugins: module_plugins ? plugins.concat(module_plugins) : plugins,
       })
       const opts = { preserveSelection: true, ...options }
-      if (Object.keys(options).length) {
-        throw new TypeError('bad test, cannot use options yet');
-      }
+      // if (Object.keys(options).length) {
+      //   throw new TypeError('bad test, cannot use options yet');
+      // }
 
       const inputSyncDoc = toSyncDocument(input.document.toJSON());
       

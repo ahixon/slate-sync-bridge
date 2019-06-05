@@ -1,5 +1,9 @@
 {
   "name": "slate-sync-bridge",
+  "author": {
+    "name": "Alex Hixon",
+    "email": "alex@alexhixon.com"
+  },
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
