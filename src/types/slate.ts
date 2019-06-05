@@ -36,6 +36,8 @@ export type TextJSON = {
 }
 
 export type MarkJSON = {
+  object: 'mark';
+  
   type: string;
   data?: object;
 }

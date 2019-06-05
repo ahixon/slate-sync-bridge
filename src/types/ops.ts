@@ -1,4 +1,5 @@
 import { SyncMark, SyncNode } from "../types/sync";
+import { MarkProperties } from "slate";
 
 export type SyncInsertTextOperation = {
   type: "insert_text";
@@ -62,11 +63,16 @@ export type SyncSetNodeOperation = {
   newProperties: any;
 }
 
+export type SyncMarkProperties = {
+  type?: string;
+  data?: Record<string, any>;
+}
+
 export type SyncSetMarkOperation = {
   type: "set_mark";
   path: number[];
-  properties: any;
-  newProperties: any;
+  properties: SyncMarkProperties;
+  newProperties: SyncMarkProperties;
 }
 
 export type SyncOperation =

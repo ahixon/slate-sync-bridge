@@ -1,8 +1,22 @@
-import { Operation, Path, MarkJSON } from "slate";
+import { Operation, Path, MarkJSON, MarkProperties } from "slate";
 import { createSyncNode } from "../node-convert/sync";
 import { NodeJSON } from "../types/slate";
-import { SyncOperation } from "../types/ops";
+import { SyncOperation, SyncMarkProperties } from "../types/ops";
 import { toNumberPath } from "./path";
+
+const toSyncMarkProperties = (props: MarkProperties) => {
+  const markProps: SyncMarkProperties = {}
+
+  if (props.type) {
+    markProps.type = props.type;
+  }
+
+  if (props.data) {
+    markProps.data = props.data && (props.data.toJSON ? props.data.toJSON() : props.data)
+  }
+
+  return markProps;
+}
 
 // DO NOT spread objects here; source is a Immutable Record
 export const toSyncOp = (op: Operation): SyncOperation | null => {
@@ -81,8 +95,8 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       return {
         type: op.type,
         path: toNumberPath(op.path),
-        properties: op.properties,
-        newProperties: op.newProperties
+        properties: toSyncMarkProperties(op.properties),
+        newProperties: toSyncMarkProperties(op.newProperties)
       };
     case "set_selection":
     case "set_value":
