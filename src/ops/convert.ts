@@ -6,80 +6,87 @@ import { toNumberPath } from "./path";
 
 // DO NOT spread objects here; source is a Immutable Record
 export const toSyncOp = (op: Operation): SyncOperation | null => {
-  if (op.type === "insert_text") {
-    return {
-      type: op.type,
+  switch (op.type) {
+    case "insert_text":
+      return {
+        type: op.type,
 
-      offset: op.offset,
-      text: op.text,
-      path: toNumberPath(op.path),
-      marks: op.marks ? op.marks.map(mark => mark.toJSON() as MarkJSON) : []
-    };
-  } else if (op.type === "remove_text") {
-    return {
-      type: op.type,
+        offset: op.offset,
+        text: op.text,
+        path: toNumberPath(op.path),
+        marks: op.marks ? op.marks.map(mark => mark.toJSON() as MarkJSON) : []
+      };
+    case "remove_text":
+      return {
+        type: op.type,
 
-      offset: op.offset,
-      text: op.text,
-      path: toNumberPath(op.path)
-    };
-  } else if (op.type === "insert_node") {
-    return {
-      type: op.type,
+        offset: op.offset,
+        text: op.text,
+        path: toNumberPath(op.path)
+      };
+    case "insert_node":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path),
-      node: createSyncNode(op.node.toJSON() as NodeJSON)
-    };
-  } else if (op.type === "move_node") {
-    return {
-      type: op.type,
+        path: toNumberPath(op.path),
+        node: createSyncNode(op.node.toJSON() as NodeJSON)
+      };
+    case "move_node":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path),
-      newPath: toNumberPath(op.newPath)
-    };
-  } else if (op.type === 'remove_node') {
-    return {
-      type: op.type,
+        path: toNumberPath(op.path),
+        newPath: toNumberPath(op.newPath)
+      };
+    case "remove_node":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path)
-    }
-  } else if (op.type === 'split_node') {
-    return {
-      type: op.type,
+        path: toNumberPath(op.path)
+      };
+    case "split_node":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path),
-      position: op.position,
-      properties: op.properties
-    }
-  } else if (op.type  ===  'merge_node') {
-    return {
-      type: op.type,
+        path: toNumberPath(op.path),
+        position: op.position,
+        properties: op.properties
+      };
+    case "merge_node":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path),
-    }
-  } else if (op.type === 'add_mark') {
-    return {
-      type: op.type,
+        path: toNumberPath(op.path)
+      };
+    case "add_mark":
+      return {
+        type: op.type,
 
-      path: toNumberPath(op.path),
-      mark: op.mark.toJSON() as MarkJSON,
-    }
-  } else if (op.type === 'remove_mark') {
-    return {
-      type: op.type,
-      path: toNumberPath(op.path),
-      mark: op.mark.toJSON() as MarkJSON
-    }
-  } else if (op.type === 'set_node') {
-    return {
-      type: op.type,
-      path: toNumberPath(op.path),
-      newProperties: op.newProperties
-    }
-  } else if (op.type === "set_selection" || op.type === "set_value") {
-    // Value-specific operations. These don't apply to doc
-    return null;
+        path: toNumberPath(op.path),
+        mark: op.mark.toJSON() as MarkJSON
+      };
+    case "remove_mark":
+      return {
+        type: op.type,
+        path: toNumberPath(op.path),
+        mark: op.mark.toJSON() as MarkJSON
+      };
+    case "set_node":
+      return {
+        type: op.type,
+        path: toNumberPath(op.path),
+        newProperties: op.newProperties
+      };
+    case "set_mark":
+      return {
+        type: op.type,
+        path: toNumberPath(op.path),
+        properties: op.properties,
+        newProperties: op.newProperties
+      };
+    case "set_selection":
+    case "set_value":
+      // Value-specific operations. These don't apply to doc
+      return null;
   }
-
-  throw new TypeError(`cannot convert op ${JSON.stringify(op)} to sync op`);
 };

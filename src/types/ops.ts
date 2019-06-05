@@ -62,6 +62,13 @@ export type SyncSetNodeOperation = {
   newProperties: any;
 }
 
+export type SyncSetMarkOperation = {
+  type: "set_mark";
+  path: number[];
+  properties: any;
+  newProperties: any;
+}
+
 export type SyncOperation =
   | SyncInsertTextOperation
   | SyncRemoveTextOperation
@@ -73,3 +80,4 @@ export type SyncOperation =
   | SyncAddMarkOperation
   | SyncRemoveMarkOperation
   | SyncSetNodeOperation
+  | SyncSetMarkOperation;
