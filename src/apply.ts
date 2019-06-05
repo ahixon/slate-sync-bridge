@@ -3,7 +3,7 @@ import { SyncDocument } from "./types/sync";
 import { toSyncOp } from "./ops/convert";
 import { insertText, removeText } from "./ops/text";
 import { insertNode, moveNode, removeNode, splitNode, mergeNode, setNodeProperties } from "./ops/node";
-import { addMark, removeMark } from "./ops/mark";
+import { addMark, removeMark, setMark } from "./ops/mark";
 
 export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocument => {
   const op = toSyncOp(slateOp);
@@ -35,5 +35,9 @@ export const applyOperation = (doc: SyncDocument, slateOp: Operation): SyncDocum
       return addMark(doc, op);
     case 'remove_mark':
       return removeMark(doc, op);
+    case 'set_mark':
+      return setMark(doc, op);
   }
+
+  throw new TypeError('invalid op');
 }

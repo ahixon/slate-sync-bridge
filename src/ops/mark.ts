@@ -1,5 +1,5 @@
 import { SyncDocument } from "../types/sync";
-import { SyncAddMarkOperation, SyncRemoveMarkOperation } from "../types/ops";
+import { SyncAddMarkOperation, SyncRemoveMarkOperation, SyncSetMarkOperation } from "../types/ops";
 import { walk } from "./path";
 import equal from 'fast-deep-equal';
 
@@ -39,5 +39,9 @@ export const removeMark = (doc: SyncDocument, op: SyncRemoveMarkOperation): Sync
 
   node.marks.splice(existingIdx, 1);
 
+  return doc;
+}
+
+export const setMark = (doc: SyncDocument, op: SyncSetMarkOperation): SyncDocument => {
   return doc;
 }
