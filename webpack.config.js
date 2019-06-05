@@ -1,8 +1,12 @@
 module.exports = {
   entry: './src/index.ts',
   output: {
-    filename: './bundle.js'
+    filename: './bundle.js',
+    libraryTarget: 'umd',
+    library: 'slate-sync-bridge',
+    umdNamedDefine: true,
   },
+  mode: 'development',
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"]
   },

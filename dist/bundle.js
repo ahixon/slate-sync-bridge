@@ -1,2 +1,753 @@
-!function(t){var e={};function r(n){if(e[n])return e[n].exports;var o=e[n]={i:n,l:!1,exports:{}};return t[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},r.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},r.t=function(t,e){if(1&e&&(t=r(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var o in t)r.d(n,o,function(e){return t[e]}.bind(null,o));return n},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="",r(r.s=1)}([function(t,e,r){"use strict";var n=Array.isArray,o=Object.keys,a=Object.prototype.hasOwnProperty;t.exports=function t(e,r){if(e===r)return!0;if(e&&r&&"object"==typeof e&&"object"==typeof r){var i,p,s,c=n(e),u=n(r);if(c&&u){if((p=e.length)!=r.length)return!1;for(i=p;0!=i--;)if(!t(e[i],r[i]))return!1;return!0}if(c!=u)return!1;var f=e instanceof Date,d=r instanceof Date;if(f!=d)return!1;if(f&&d)return e.getTime()==r.getTime();var y=e instanceof RegExp,h=r instanceof RegExp;if(y!=h)return!1;if(y&&h)return e.toString()==r.toString();var l=o(e);if((p=l.length)!==o(r).length)return!1;for(i=p;0!=i--;)if(!a.call(r,l[i]))return!1;for(i=p;0!=i--;)if(!t(e[s=l[i]],r[s]))return!1;return!0}return e!=e&&r!=r}},function(t,e,r){"use strict";r.r(e);var n=function(){return(n=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var o in e=arguments[r])Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o]);return t}).apply(this,arguments)},o=function(t){if(!t.object)throw new TypeError("cannot create node with missing type");switch(t.object){case"document":case"block":case"inline":return n({},t,{nodes:t.nodes&&t.nodes.map(o)});case"text":return n({},t,{text:t.text?Array.from(t.text):[],marks:t.marks||[]})}},a=function(t){return o(t)},i=function(t,e){return e.reduce(function(r,n){if(!function(t){return"text"!==t.object}(r)||!r.nodes)throw new TypeError("path "+e.toString()+" does not match tree "+JSON.stringify(t));return r.nodes[n]},t)},p=function(t,e,r){void 0===r&&(r=1);var n=s(e,r),o=n[0],a=n[1];return[i(t,a),o]},s=function(t,e){if(void 0===e&&(e=1),e>t.length)throw new TypeError("requested ancestor is higher than root");return[t[t.length-e],t.slice(0,t.length-e)]},c=function(t){if("string"==typeof t)throw new TypeError("cannot handle key-based paths");return"number"==typeof t?[t]:Array.isArray(t)?t:t.toJS()},u=function(t){var e={};return t.type&&(e.type=t.type),t.data&&(e.data=t.data&&(t.data.toJSON?t.data.toJSON():t.data)),e},f=function(){return(f=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var o in e=arguments[r])Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o]);return t}).apply(this,arguments)},d=function(t,e){var r=p(t,e.path),n=r[0],o=r[1];if("text"===n.object)throw new TypeError("cannot insert node into text node");return n.nodes.splice(o,0,e.node),t},y=function(t,e){var r=p(t,e.path),n=r[0],o=r[1];if("text"===n.object)throw new TypeError("cannot remove node from text node");return n.nodes.splice(o,1),t},h=function(t,e){var r,n,o=i(t,e.path),a=i(t,function(t){var e=s(t),r=e[0],n=e[1],o=r-1;if(o<0)throw new TypeError("node at path "+t+" has no sibling before it");return n.concat([o])}(e.path));if(o.object!==a.object)throw new TypeError("cannot merge nodes of differing types "+o.object+" and "+a.object);return"text"===a.object?(r=a.text).push.apply(r,o.text):a.nodes&&o.nodes&&(n=a.nodes).push.apply(n,o.nodes),y(t,{type:"remove_node",path:e.path})},l=r(0),m=r.n(l),w=function(){return(w=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var o in e=arguments[r])Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o]);return t}).apply(this,arguments)},x=function(t,e){var r=function(t){switch(t.type){case"insert_text":return{type:t.type,offset:t.offset,text:t.text,path:c(t.path),marks:t.marks?t.marks.map(function(t){return t.toJSON()}):[]};case"remove_text":return{type:t.type,offset:t.offset,text:t.text,path:c(t.path)};case"insert_node":return{type:t.type,path:c(t.path),node:o(t.node.toJSON())};case"move_node":return{type:t.type,path:c(t.path),newPath:c(t.newPath)};case"remove_node":return{type:t.type,path:c(t.path)};case"split_node":return{type:t.type,path:c(t.path),position:t.position,properties:t.properties};case"merge_node":return{type:t.type,path:c(t.path)};case"add_mark":case"remove_mark":return{type:t.type,path:c(t.path),mark:t.mark.toJSON()};case"set_node":return{type:t.type,path:c(t.path),newProperties:t.newProperties};case"set_mark":return{type:t.type,path:c(t.path),properties:u(t.properties),newProperties:u(t.newProperties)};case"set_selection":case"set_value":return null}}(e);if(!r)return t;switch(r.type){case"insert_text":return function(t,e){var r,n=i(t,e.path);if("text"!==n.object)throw new TypeError("did not get text node at path");return(r=n.text).splice.apply(r,[e.offset,0].concat(Array.from(e.text))),t}(t,r);case"remove_text":return function(t,e){var r=i(t,e.path);if("text"!==r.object)throw new TypeError("did not get text node at path");return r.text.splice(e.offset,Array.from(e.text).length),t}(t,r);case"insert_node":return d(t,r);case"move_node":return function(t,e){var r,n=p(t,e.path),o=n[0],a=n[1],i=p(t,e.newPath),s=i[0],c=i[1];if("text"===o.object||"text"===s.object)throw new TypeError("cannot move node as child of a text node");return(r=s.nodes).splice.apply(r,[c,0].concat(o.nodes.splice(a,1))),t}(t,r);case"remove_node":return y(t,r);case"split_node":return function(t,e){var r,n,o,a,p=i(t,e.path);return r="text"===p.object?{object:"text",text:p.text.splice(e.position),marks:Array.from(p.marks)}:f({},p,{nodes:p.nodes.splice(e.position)}),d(t,{type:"insert_node",path:(n=e.path,o=s(n),a=o[0],o[1].concat([a+1])),node:r})}(t,r);case"merge_node":return h(t,r);case"set_node":return function(t,e){var r=i(t,e.path),n=e.newProperties,o=n.type,a=n.data;if(o&&(r.type=o),"text"!==r.object&&a){var p=a.toJSON?a.toJSON():f({},a);r.data=p}return t}(t,r);case"add_mark":return function(t,e){var r=i(t,e.path);if("text"!==r.object)throw new TypeError("cannot set marks on non-text node");return r.marks.findIndex(function(t){return t.type===e.mark.type&&m()(t.data,e.mark.data)})>-1?t:(r.marks.push(e.mark),t)}(t,r);case"remove_mark":return function(t,e){var r=i(t,e.path);if("text"!==r.object)throw new TypeError("cannot set marks on non-text node");var n=r.marks.findIndex(function(t){return t.type===e.mark.type&&m()(t.data,e.mark.data)});return-1===n?t:(r.marks.splice(n,1),t)}(t,r);case"set_mark":return function(t,e){var r=i(t,e.path);if("text"!==r.object)throw new TypeError("cannot set marks on non-text node");var n=r.marks.findIndex(function(t){return t.type===e.properties.type&&m()(t.data,e.properties.data)});if(-1===n){if(console.warn("did not find old mark with properties",e.properties),!e.newProperties.type)throw new TypeError("no old mark, and new mark missing type");r.marks.push(w({object:"mark",type:e.newProperties.type},e.newProperties))}else r.marks[n]=w({object:"mark"},r.marks[n],e.newProperties);return t}(t,r)}throw new TypeError("invalid op")},b=function(){return(b=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var o in e=arguments[r])Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o]);return t}).apply(this,arguments)},v=function(t){if(!t.object)throw new TypeError("cannot create node with missing type");switch(t.object){case"document":case"block":case"inline":return b({},t,{nodes:t.nodes&&t.nodes.map(v)});case"text":return b({},t,{text:t.text.join("")})}},j=function(t){return v(t)};r.d(e,"applyOperation",function(){return x}),r.d(e,"toSyncDocument",function(){return a}),r.d(e,"toSlateDocument",function(){return j})}]);
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("slate-sync-bridge", [], factory);
+	else if(typeof exports === 'object')
+		exports["slate-sync-bridge"] = factory();
+	else
+		root["slate-sync-bridge"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.ts");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/fast-deep-equal/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/fast-deep-equal/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var isArray = Array.isArray;
+var keyList = Object.keys;
+var hasProp = Object.prototype.hasOwnProperty;
+module.exports = function equal(a, b) {
+    if (a === b)
+        return true;
+    if (a && b && typeof a == 'object' && typeof b == 'object') {
+        var arrA = isArray(a), arrB = isArray(b), i, length, key;
+        if (arrA && arrB) {
+            length = a.length;
+            if (length != b.length)
+                return false;
+            for (i = length; i-- !== 0;)
+                if (!equal(a[i], b[i]))
+                    return false;
+            return true;
+        }
+        if (arrA != arrB)
+            return false;
+        var dateA = a instanceof Date, dateB = b instanceof Date;
+        if (dateA != dateB)
+            return false;
+        if (dateA && dateB)
+            return a.getTime() == b.getTime();
+        var regexpA = a instanceof RegExp, regexpB = b instanceof RegExp;
+        if (regexpA != regexpB)
+            return false;
+        if (regexpA && regexpB)
+            return a.toString() == b.toString();
+        var keys = keyList(a);
+        length = keys.length;
+        if (length !== keyList(b).length)
+            return false;
+        for (i = length; i-- !== 0;)
+            if (!hasProp.call(b, keys[i]))
+                return false;
+        for (i = length; i-- !== 0;) {
+            key = keys[i];
+            if (!equal(a[key], b[key]))
+                return false;
+        }
+        return true;
+    }
+    return a !== a && b !== b;
+};
+
+
+/***/ }),
+
+/***/ "./src/apply.ts":
+/*!**********************!*\
+  !*** ./src/apply.ts ***!
+  \**********************/
+/*! exports provided: applyOperation */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyOperation", function() { return applyOperation; });
+/* harmony import */ var _ops_convert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ops/convert */ "./src/ops/convert.ts");
+/* harmony import */ var _ops_text__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ops/text */ "./src/ops/text.ts");
+/* harmony import */ var _ops_node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ops/node */ "./src/ops/node.ts");
+/* harmony import */ var _ops_mark__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ops/mark */ "./src/ops/mark.ts");
+
+
+
+
+var applyOperation = function (doc, slateOp) {
+    var op = Object(_ops_convert__WEBPACK_IMPORTED_MODULE_0__["toSyncOp"])(slateOp);
+    if (!op) {
+        return doc;
+    }
+    switch (op.type) {
+        case 'insert_text':
+            return Object(_ops_text__WEBPACK_IMPORTED_MODULE_1__["insertText"])(doc, op);
+        case 'remove_text':
+            return Object(_ops_text__WEBPACK_IMPORTED_MODULE_1__["removeText"])(doc, op);
+        case 'insert_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["insertNode"])(doc, op);
+        case 'move_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["moveNode"])(doc, op);
+        case 'remove_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["removeNode"])(doc, op);
+        case 'split_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["splitNode"])(doc, op);
+        case 'merge_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["mergeNode"])(doc, op);
+        case 'set_node':
+            return Object(_ops_node__WEBPACK_IMPORTED_MODULE_2__["setNodeProperties"])(doc, op);
+        case 'add_mark':
+            return Object(_ops_mark__WEBPACK_IMPORTED_MODULE_3__["addMark"])(doc, op);
+        case 'remove_mark':
+            return Object(_ops_mark__WEBPACK_IMPORTED_MODULE_3__["removeMark"])(doc, op);
+        case 'set_mark':
+            return Object(_ops_mark__WEBPACK_IMPORTED_MODULE_3__["setMark"])(doc, op);
+    }
+    throw new TypeError('invalid op');
+};
+
+
+/***/ }),
+
+/***/ "./src/index.ts":
+/*!**********************!*\
+  !*** ./src/index.ts ***!
+  \**********************/
+/*! exports provided: applyOperation, toSyncDocument, toSlateDocument */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _apply__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apply */ "./src/apply.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "applyOperation", function() { return _apply__WEBPACK_IMPORTED_MODULE_0__["applyOperation"]; });
+
+/* harmony import */ var _node_convert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node-convert */ "./src/node-convert/index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "toSyncDocument", function() { return _node_convert__WEBPACK_IMPORTED_MODULE_1__["toSyncDocument"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "toSlateDocument", function() { return _node_convert__WEBPACK_IMPORTED_MODULE_1__["toSlateDocument"]; });
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/node-convert/index.ts":
+/*!***********************************!*\
+  !*** ./src/node-convert/index.ts ***!
+  \***********************************/
+/*! exports provided: createSyncNode, toSyncDocument, createSlateNode, toSlateDocument */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _sync__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sync */ "./src/node-convert/sync.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createSyncNode", function() { return _sync__WEBPACK_IMPORTED_MODULE_0__["createSyncNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "toSyncDocument", function() { return _sync__WEBPACK_IMPORTED_MODULE_0__["toSyncDocument"]; });
+
+/* harmony import */ var _slate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./slate */ "./src/node-convert/slate.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createSlateNode", function() { return _slate__WEBPACK_IMPORTED_MODULE_1__["createSlateNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "toSlateDocument", function() { return _slate__WEBPACK_IMPORTED_MODULE_1__["toSlateDocument"]; });
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/node-convert/slate.ts":
+/*!***********************************!*\
+  !*** ./src/node-convert/slate.ts ***!
+  \***********************************/
+/*! exports provided: createSlateNode, toSlateDocument */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSlateNode", function() { return createSlateNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toSlateDocument", function() { return toSlateDocument; });
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var createSlateNode = function (node) {
+    if (!node.object) {
+        throw new TypeError("cannot create node with missing type");
+    }
+    switch (node.object) {
+        case 'document':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSlateNode) });
+        case 'block':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSlateNode) });
+        case 'inline':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSlateNode) });
+        case 'text':
+            return __assign({}, node, { text: node.text.join('') });
+    }
+};
+var toSlateDocument = function (node) { return createSlateNode(node); };
+
+
+/***/ }),
+
+/***/ "./src/node-convert/sync.ts":
+/*!**********************************!*\
+  !*** ./src/node-convert/sync.ts ***!
+  \**********************************/
+/*! exports provided: createSyncNode, toSyncDocument */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSyncNode", function() { return createSyncNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toSyncDocument", function() { return toSyncDocument; });
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var createSyncNode = function (node) {
+    if (!node.object) {
+        throw new TypeError("cannot create node with missing type");
+    }
+    switch (node.object) {
+        case 'document':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSyncNode) });
+        case 'block':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSyncNode) });
+        case 'inline':
+            return __assign({}, node, { nodes: node.nodes && node.nodes.map(createSyncNode) });
+        case 'text':
+            return __assign({}, node, { text: node.text ? Array.from(node.text) : [], marks: node.marks || [] });
+    }
+};
+var toSyncDocument = function (node) { return createSyncNode(node); };
+
+
+/***/ }),
+
+/***/ "./src/ops/convert.ts":
+/*!****************************!*\
+  !*** ./src/ops/convert.ts ***!
+  \****************************/
+/*! exports provided: toSyncOp */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toSyncOp", function() { return toSyncOp; });
+/* harmony import */ var _node_convert_sync__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node-convert/sync */ "./src/node-convert/sync.ts");
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./path */ "./src/ops/path.ts");
+
+
+var toSyncMarkProperties = function (props) {
+    var markProps = {};
+    if (props.type) {
+        markProps.type = props.type;
+    }
+    if (props.data) {
+        // @ts-ignore
+        markProps.data = props.data && (props.data.toJSON ? props.data.toJSON() : props.data);
+    }
+    return markProps;
+};
+// DO NOT spread objects here; source is a Immutable Record
+var toSyncOp = function (op) {
+    switch (op.type) {
+        case "insert_text":
+            return {
+                type: op.type,
+                offset: op.offset,
+                text: op.text,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                marks: op.marks ? op.marks.map(function (mark) { return mark.toJSON(); }) : []
+            };
+        case "remove_text":
+            return {
+                type: op.type,
+                offset: op.offset,
+                text: op.text,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path)
+            };
+        case "insert_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                node: Object(_node_convert_sync__WEBPACK_IMPORTED_MODULE_0__["createSyncNode"])(op.node.toJSON())
+            };
+        case "move_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                newPath: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.newPath)
+            };
+        case "remove_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path)
+            };
+        case "split_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                position: op.position,
+                properties: op.properties
+            };
+        case "merge_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path)
+            };
+        case "add_mark":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                mark: op.mark.toJSON()
+            };
+        case "remove_mark":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                mark: op.mark.toJSON()
+            };
+        case "set_node":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                newProperties: op.newProperties
+            };
+        case "set_mark":
+            return {
+                type: op.type,
+                path: Object(_path__WEBPACK_IMPORTED_MODULE_1__["toNumberPath"])(op.path),
+                properties: toSyncMarkProperties(op.properties),
+                newProperties: toSyncMarkProperties(op.newProperties)
+            };
+        case "set_selection":
+        case "set_value":
+            // Value-specific operations. These don't apply to doc
+            return null;
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/ops/mark.ts":
+/*!*************************!*\
+  !*** ./src/ops/mark.ts ***!
+  \*************************/
+/*! exports provided: addMark, removeMark, setMark */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addMark", function() { return addMark; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeMark", function() { return removeMark; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setMark", function() { return setMark; });
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./path */ "./src/ops/path.ts");
+/* harmony import */ var fast_deep_equal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! fast-deep-equal */ "./node_modules/fast-deep-equal/index.js");
+/* harmony import */ var fast_deep_equal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(fast_deep_equal__WEBPACK_IMPORTED_MODULE_1__);
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+
+var addMark = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    if (node.object !== 'text') {
+        throw new TypeError('cannot set marks on non-text node');
+    }
+    // emulate Set behaviour
+    var existingIdx = node.marks.findIndex(function (existingMark) {
+        return existingMark.type === op.mark.type && fast_deep_equal__WEBPACK_IMPORTED_MODULE_1___default()(existingMark.data, op.mark.data);
+    });
+    if (existingIdx > -1) {
+        return doc;
+    }
+    node.marks.push(op.mark);
+    return doc;
+};
+var removeMark = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    if (node.object !== 'text') {
+        throw new TypeError('cannot set marks on non-text node');
+    }
+    // emulate Set behaviour
+    var existingIdx = node.marks.findIndex(function (existingMark) {
+        return existingMark.type === op.mark.type && fast_deep_equal__WEBPACK_IMPORTED_MODULE_1___default()(existingMark.data, op.mark.data);
+    });
+    if (existingIdx === -1) {
+        return doc;
+    }
+    node.marks.splice(existingIdx, 1);
+    return doc;
+};
+var setMark = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    if (node.object !== 'text') {
+        throw new TypeError('cannot set marks on non-text node');
+    }
+    var existingIdx = node.marks.findIndex(function (existingMark) {
+        return existingMark.type === op.properties.type && fast_deep_equal__WEBPACK_IMPORTED_MODULE_1___default()(existingMark.data, op.properties.data);
+    });
+    if (existingIdx === -1) {
+        console.warn('did not find old mark with properties', op.properties);
+        if (!op.newProperties.type) {
+            throw new TypeError('no old mark, and new mark missing type');
+        }
+        node.marks.push(__assign({ object: 'mark', type: op.newProperties.type }, op.newProperties));
+    }
+    else {
+        node.marks[existingIdx] = __assign({ object: 'mark' }, node.marks[existingIdx], op.newProperties);
+    }
+    return doc;
+};
+
+
+/***/ }),
+
+/***/ "./src/ops/node.ts":
+/*!*************************!*\
+  !*** ./src/ops/node.ts ***!
+  \*************************/
+/*! exports provided: insertNode, moveNode, removeNode, splitNode, mergeNode, setNodeProperties */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "insertNode", function() { return insertNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveNode", function() { return moveNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeNode", function() { return removeNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "splitNode", function() { return splitNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeNode", function() { return mergeNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setNodeProperties", function() { return setNodeProperties; });
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./path */ "./src/ops/path.ts");
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var insertNode = function (doc, op) {
+    var _a = Object(_path__WEBPACK_IMPORTED_MODULE_0__["getAncestor"])(doc, op.path), parentNode = _a[0], index = _a[1];
+    if (parentNode.object === "text") {
+        throw new TypeError("cannot insert node into text node");
+    }
+    parentNode.nodes.splice(index, 0, op.node);
+    return doc;
+};
+var moveNode = function (doc, op) {
+    var _a;
+    var _b = Object(_path__WEBPACK_IMPORTED_MODULE_0__["getAncestor"])(doc, op.path), srcParent = _b[0], srcIndex = _b[1];
+    var _c = Object(_path__WEBPACK_IMPORTED_MODULE_0__["getAncestor"])(doc, op.newPath), destParent = _c[0], destIndex = _c[1];
+    if (srcParent.object === "text" || destParent.object === "text") {
+        throw new TypeError("cannot move node as child of a text node");
+    }
+    (_a = destParent.nodes).splice.apply(_a, [destIndex,
+        0].concat(srcParent.nodes.splice(srcIndex, 1)));
+    return doc;
+};
+var removeNode = function (doc, op) {
+    var _a = Object(_path__WEBPACK_IMPORTED_MODULE_0__["getAncestor"])(doc, op.path), parentNode = _a[0], index = _a[1];
+    if (parentNode.object === "text") {
+        throw new TypeError("cannot remove node from text node");
+    }
+    parentNode.nodes.splice(index, 1);
+    return doc;
+};
+var splitNode = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    var splitNode;
+    if (node.object === "text") {
+        splitNode = {
+            object: "text",
+            text: node.text.splice(op.position),
+            marks: Array.from(node.marks)
+        };
+    }
+    else {
+        splitNode = __assign({}, node, { nodes: node.nodes.splice(op.position) });
+    }
+    return insertNode(doc, {
+        type: "insert_node",
+        path: Object(_path__WEBPACK_IMPORTED_MODULE_0__["incrementPath"])(op.path),
+        node: splitNode
+    });
+};
+var mergeNode = function (doc, op) {
+    var _a, _b;
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    var prevNode = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, Object(_path__WEBPACK_IMPORTED_MODULE_0__["decrementPath"])(op.path));
+    if (node.object !== prevNode.object) {
+        throw new TypeError("cannot merge nodes of differing types " + node.object + " and " + prevNode.object);
+    }
+    // fold node into prevNode
+    // FIXME: please don't cast here
+    if (prevNode.object === "text") {
+        (_a = prevNode.text).push.apply(_a, node.text);
+    }
+    else {
+        if (prevNode.nodes && node.nodes) {
+            (_b = prevNode.nodes).push.apply(_b, node.nodes);
+        }
+    }
+    return removeNode(doc, {
+        type: "remove_node",
+        path: op.path
+    });
+};
+var setNodeProperties = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    var _a = op.newProperties, type = _a.type, data = _a.data;
+    if (type) {
+        // @ts-ignore
+        node.type = type;
+    }
+    if (node.object !== "text" && data) {
+        var jsonData = data.toJSON ? data.toJSON() : __assign({}, data);
+        node.data = jsonData;
+    }
+    return doc;
+};
+
+
+/***/ }),
+
+/***/ "./src/ops/path.ts":
+/*!*************************!*\
+  !*** ./src/ops/path.ts ***!
+  \*************************/
+/*! exports provided: isTreeNode, walk, getAncestor, ancestorPath, incrementPath, decrementPath, toNumberPath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTreeNode", function() { return isTreeNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "walk", function() { return walk; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAncestor", function() { return getAncestor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ancestorPath", function() { return ancestorPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "incrementPath", function() { return incrementPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decrementPath", function() { return decrementPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toNumberPath", function() { return toNumberPath; });
+// @ts-ignore
+var isTreeNode = function (node) {
+    return node.object !== 'text';
+};
+var walk = function (node, path) {
+    return path.reduce(function (curNode, idx) {
+        if (!isTreeNode(curNode) || !curNode.nodes) {
+            throw new TypeError("path " + path.toString() + " does not match tree " + JSON.stringify(node));
+        }
+        return curNode.nodes[idx];
+    }, node);
+    // FIXME: ^ that cast is odd
+};
+var getAncestor = function (doc, path, level) {
+    if (level === void 0) { level = 1; }
+    var _a = ancestorPath(path, level), idx = _a[0], ancestor = _a[1];
+    return [walk(doc, ancestor), idx];
+};
+var ancestorPath = function (path, level) {
+    if (level === void 0) { level = 1; }
+    if (level > path.length) {
+        throw new TypeError('requested ancestor is higher than root');
+    }
+    return [path[path.length - level], path.slice(0, path.length - level)];
+};
+var incrementPath = function (path) {
+    var _a = ancestorPath(path), idx = _a[0], parentPath = _a[1];
+    return parentPath.concat([idx + 1]);
+};
+var decrementPath = function (path) {
+    var _a = ancestorPath(path), idx = _a[0], parentPath = _a[1];
+    var prevIdx = idx - 1;
+    if (prevIdx < 0) {
+        throw new TypeError("node at path " + path + " has no sibling before it");
+    }
+    return parentPath.concat([prevIdx]);
+};
+var toNumberPath = function (path) {
+    if (typeof path === "string") {
+        // return [Number(path)];
+        throw new TypeError("cannot handle key-based paths");
+    }
+    else if (typeof path === "number") {
+        return [path];
+    }
+    else if (Array.isArray(path)) {
+        return path;
+    }
+    else {
+        return path.toJS();
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/ops/text.ts":
+/*!*************************!*\
+  !*** ./src/ops/text.ts ***!
+  \*************************/
+/*! exports provided: insertText, removeText */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "insertText", function() { return insertText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeText", function() { return removeText; });
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./path */ "./src/ops/path.ts");
+
+var insertText = function (doc, op) {
+    var _a;
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    if (node.object !== 'text') {
+        throw new TypeError('did not get text node at path');
+    }
+    (_a = node.text).splice.apply(_a, [op.offset, 0].concat(Array.from(op.text)));
+    return doc;
+};
+var removeText = function (doc, op) {
+    var node = Object(_path__WEBPACK_IMPORTED_MODULE_0__["walk"])(doc, op.path);
+    if (node.object !== 'text') {
+        throw new TypeError('did not get text node at path');
+    }
+    node.text.splice(op.offset, Array.from(op.text).length);
+    return doc;
+};
+
+
+/***/ })
+
+/******/ });
+});
 //# sourceMappingURL=bundle.js.map
