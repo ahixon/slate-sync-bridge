@@ -70,8 +70,14 @@ export const toSyncOp = (op: Operation): SyncOperation | null => {
       path: toNumberPath(op.path),
       mark: op.mark.toJSON() as MarkJSON
     }
+  } else if (op.type === 'set_node') {
+    return {
+      type: op.type,
+      path: toNumberPath(op.path),
+      newProperties: op.newProperties
+    }
   } else if (op.type === "set_selection" || op.type === "set_value") {
-    // Value specific operations
+    // Value-specific operations. These don't apply to doc
     return null;
   }
 

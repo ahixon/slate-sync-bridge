@@ -15,7 +15,6 @@ export const addMark = (doc: SyncDocument, op: SyncAddMarkOperation): SyncDocume
   )
 
   if (existingIdx > -1) {
-    console.warn('had duplicate mark', node.marks[existingIdx]);
     return doc;
   } 
 
@@ -35,8 +34,6 @@ export const removeMark = (doc: SyncDocument, op: SyncRemoveMarkOperation): Sync
   )
 
   if (existingIdx === -1) {
-    // console.log({mark: op.mark}, node.marks, JSON.stringify(doc))
-    // throw new TypeError('could not find mark on node');
     return doc;
   }
 
