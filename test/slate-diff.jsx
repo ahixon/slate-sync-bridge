@@ -2,7 +2,7 @@
 
 import h from "./slate/helpers/h";
 
-import { applyOperation, toSlateDocument, toSyncDocument } from "../src";
+import { applyOperation, toSyncDocument } from "../src";
 import { CachedSlateTransformer } from "../src/slate-diff";
 import Automerge from "automerge";
 
@@ -21,7 +21,7 @@ const setup = input => {
 };
 
 describe("slate-diff", () => {
-  it.skip("returns the same document if nothing applied", () => {
+  it("returns the same document if nothing applied", () => {
     const input = (
       <document>
         <paragraph>hello world</paragraph>
@@ -117,14 +117,14 @@ describe("slate-diff", () => {
     expect(transformed.toJSON()).toEqual(output.toJSON());
   })
 
-  // it.only('returns the same document if nothing applied, filling cache first', () => {
+  // it('returns the same document if nothing applied, filling cache first', () => {
   //   transformer.fillCache(syncJSON, input);
 
   //   const output = transformer.apply(loadedDoc.doc)
   //   expect(output.toJSON()).toEqual(input.toJSON());
   // })
 
-  it.only("maintains value reference for unchanged nodes", () => {
+  it("maintains value reference for unchanged nodes", () => {
     const input = (
       <document>
         <paragraph>

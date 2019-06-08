@@ -1,7 +1,5 @@
 import { SyncDocument, SyncNode, SyncBlock } from "../types/sync";
-import { toSlateDocument } from "..";
-import { NodeJSON } from "../types/slate";
-import { Document, Node, KeyUtils, Block, Inline, Text } from "slate";
+import { Document, Node, Block, Inline, Text } from "slate";
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { getObjectId } from "automerge";
 
@@ -63,22 +61,17 @@ export class CachedSlateTransformer {
     
     // used cached version if available
     const objectId: string = getObjectId(syncNode);
-    console.log('looking up', JSON.stringify(syncNode), 'with objectId', objectId);
     
     const node = this.nodeCache.get(objectId);
     if (node) {
-      console.log('cache hit');
       return node;
     }
-    console.warn('cache miss');
 
     // construct a new one
     const slateNode = this.createSlateNode(syncNode);
     
     // add to cache
     this.nodeCache.set(objectId, slateNode);
-
-    console.log('setting cache for', objectId)
 
     // link the parent object ids
     this.parentCache.set(objectId, getObjectId(parentNode));
@@ -92,8 +85,6 @@ export class CachedSlateTransformer {
         this.parentCache.set(attrObjectId, objectId);  
       }
     })
-
-    console.log('linking', objectId, 'to have parent', getObjectId(parentNode));
 
     return slateNode;
   };
@@ -121,7 +112,6 @@ export class CachedSlateTransformer {
     const objectIdSet = new Set<string>();
     actions.forEach(action => {
       action.ops.forEach(op => {
-        console.log(JSON.stringify(op));
         objectIdSet.add(op.obj);
       })
     })
@@ -130,22 +120,15 @@ export class CachedSlateTransformer {
 
     // find all their parents; we want to invalidate them too as their children changed
     const parentObjectIds = Array.from(objectIds.values()).flatMap(objectId => {
-      console.log('\tcollecting', objectId, );
       return this.collectParents(objectId);
     })
-
-    console.log(this.parentCache, this.nodeCache);
     
     // remove each changed object and their ancestors from the cache so that we rebuild them
     const invalidate = parentObjectIds.concat(objectIds);
-    console.log('invalidated', invalidate, objectIds, parentObjectIds);
     
     invalidate.forEach(objectId => {
       this.nodeCache.delete(objectId);
-
-      // do *not* invalidate the children of each ancestor
     })
-
 
     // construct a (partially) cached version of the Document
     return this.createCachedDocument(syncdoc);
