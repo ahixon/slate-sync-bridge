@@ -33,11 +33,11 @@ export class CachedSlateTransformer {
 
   // private fillCacheRecursive(syncNode: SyncNode, slateNode: Node, parentNode: SyncNode) {
   //   // add this node to the cache
-  //   const objectId = getObjectId(syncNode);
+  //   const objectId = Automerge.getObjectId(syncNode);
   //   this.nodeCache.set(objectId, slateNode);
 
   //   // and track the parent
-  //   this.parentCache.set(getObjectId(parentNode), objectId);
+  //   this.parentCache.set(Automerge.getObjectId(parentNode), objectId);
 
   //   if (syncNode.object === 'text' || slateNode instanceof Text || !syncNode.nodes) {
   //     return;
