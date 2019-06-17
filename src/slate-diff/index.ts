@@ -1,7 +1,6 @@
-import { SyncDocument, SyncNode, SyncBlock } from "../types/sync";
+import { SyncDocument, SyncNode, SyncBlock, SyncInline } from "../types/sync";
 import { Document, Node, Block, Inline, Text } from "slate";
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
-import { getObjectId } from "automerge";
 
 type AutomergeChange = {
   ops: Array<AutomergeAction>;
@@ -17,14 +16,21 @@ type AutomergeAction = AutomergeActionMeta;
 const MAX_NODE_DEPTH = 1000;
 
 type ObjectID = string;
+type GetObjectID = (obj: any) => ObjectID | undefined;
 
 export class CachedSlateTransformer {
   nodeCache: Map<ObjectID, Node>;
   parentCache: Map<ObjectID, ObjectID>;
+  getObjectId: GetObjectID;
 
-  constructor() {
+  constructor(getObjectId: GetObjectID) {
     this.nodeCache = new Map();
     this.parentCache = new Map();
+    this.getObjectId = getObjectId;
+
+    if (!getObjectId) {
+      throw new Error('getObjectId is required');
+    }
   }
 
   // fillCache(syncDoc: SyncDocument, slateDoc: Document) {
@@ -60,27 +66,36 @@ export class CachedSlateTransformer {
     }
     
     // used cached version if available
-    const objectId: string = getObjectId(syncNode);
+    const objectId = this.getObjectId(syncNode);
+    if (!objectId) {
+      throw new TypeError(`${JSON.stringify(syncNode)} is not an automerge object`);
+    }
     
     const node = this.nodeCache.get(objectId);
     if (node) {
+      // console.log('cache hit', objectId, node.toJSON())
       return node;
     }
 
     // construct a new one
     const slateNode = this.createSlateNode(syncNode);
+
+    // console.warn('cache miss', objectId, slateNode.toJSON())
     
     // add to cache
     this.nodeCache.set(objectId, slateNode);
 
     // link the parent object ids
-    this.parentCache.set(objectId, getObjectId(parentNode));
+    const parentObjectId = this.getObjectId(parentNode);
+    if (parentObjectId) {
+      this.parentCache.set(objectId, parentObjectId);
+    }
 
     // do the same for all other fields that aren't nodes (e.g. text and node arrays)
     // TODO: make this a deep check
     Object.keys(syncNode).forEach(attr => {
       // @ts-ignore
-      const attrObjectId = getObjectId(syncNode[attr]);
+      const attrObjectId = this.getObjectId(syncNode[attr]);
       if (attrObjectId) {
         this.parentCache.set(attrObjectId, objectId);  
       }
@@ -145,7 +160,8 @@ export class CachedSlateTransformer {
           text: node.text.join("")
         })
 
-      // TODO: inline?
+      case 'inline':
+        return this.createCachedInline(node)
       default: {
         throw new Error(`unsupported node type ${node.object}`);
       }
@@ -161,6 +177,21 @@ export class CachedSlateTransformer {
     let nodes = syncNode.nodes ? this.createCachedNodeList(syncNode.nodes, syncNode) : [];
 
     return Block.fromJSON({
+      ...syncNode,
+
+      // will end up calling createNodeList which calls Node.create on each element
+      // each should already be a Slate Node, so constructor should be a no-op
+
+      // @ts-ignore -- need to exclude Document possibility
+      nodes: ImmutableList(nodes)
+    })
+  }
+
+  createCachedInline(syncNode: SyncInline): Inline {
+    // create children first
+    let nodes = syncNode.nodes ? this.createCachedNodeList(syncNode.nodes, syncNode) : [];
+
+    return Inline.fromJSON({
       ...syncNode,
 
       // will end up calling createNodeList which calls Node.create on each element
