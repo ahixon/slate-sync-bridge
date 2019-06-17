@@ -13,7 +13,7 @@ const setup = input => {
     doc.doc = syncJSON;
   });
 
-  const transformer = new CachedSlateTransformer();
+  const transformer = new CachedSlateTransformer(Automerge.getObjectId);
   return {
     transformer,
     loadedDoc
@@ -124,7 +124,7 @@ describe("slate-diff", () => {
   //   expect(output.toJSON()).toEqual(input.toJSON());
   // })
 
-  it("maintains value reference for unchanged nodes", () => {
+  it("returns the correct JSON output after multiple ops", () => {
     const input = (
       <document>
         <paragraph>
@@ -176,4 +176,62 @@ describe("slate-diff", () => {
 
     expect(lastTransformed.toJSON()).toEqual(output.toJSON());
   });
+
+  it.only('can apply changes to nested nodes with an empty cache', () => {
+    const input = (
+      <document>
+        <paragraph>
+          hello world here is a long string
+        </paragraph>
+        <paragraph>unchanged</paragraph>
+      </document>
+    );
+
+    // const output = (
+    //   <document>
+    //     <paragraph>hello world here </paragraph>
+    //     <paragraph>is a long string</paragraph>
+    //     <pargraph>unchanged</pargraph>
+    //   </document>
+    // );
+
+    const { transformer, loadedDoc } = setup(input);
+
+    const ops = [
+      {
+        path: [0, 0],
+        position: 17,
+        properties: {data: {}},
+        type: "split_node"
+      },
+      {
+        path: [0],
+        position: 1,
+        properties: {type: "paragraph", data: {}},
+        type: "split_node",
+      },
+    ]
+
+    // load the cache
+    const initDoc = transformer.apply(loadedDoc.doc);
+
+    let lastDoc = loadedDoc;
+    let lastTransformed;
+
+    ops.forEach(op => {
+      const updatedDoc = Automerge.change(lastDoc, doc => applyOperation(doc.doc, op))
+      const changes = Automerge.getChanges(lastDoc, updatedDoc);
+
+      lastTransformed = transformer.apply(updatedDoc.doc, changes);
+      lastDoc = updatedDoc;
+    });
+
+    const lastTransformedNode = lastTransformed.nodes.last();
+    const lastInputNode = initDoc.nodes.last();
+    
+    expect(lastTransformedNode).toBe(lastInputNode)
+    expect(lastTransformedNode.nodes.first()).toBe(lastInputNode.nodes.first())
+    expect(lastTransformed.nodes.first()).not.toBe(initDoc.nodes.first())
+  })
+  
 });
