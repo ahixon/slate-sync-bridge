@@ -81,7 +81,7 @@ export const splitNode = (
       // @ts-ignore
       type: node.type,
 
-      data: JSON.parse(JSON.stringify(node.data)),
+      data: node.data ? JSON.parse(JSON.stringify(node.data)) : undefined,
       nodes: node.nodes!.splice(op.position)
     };
   }
