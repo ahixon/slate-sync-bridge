@@ -1,0 +1,2 @@
+- only need to regenerate keys of changed nodes
+- parent nodes should be new objects, but keys should remain the same
