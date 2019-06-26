@@ -80,7 +80,7 @@ export class CachedSlateTransformer {
     // construct a new one
     const slateNode = this.createSlateNode(syncNode);
 
-    // console.warn('cache miss', objectId, slateNode.toJSON())
+    console.warn('cache miss', objectId, slateNode.toJSON())
     
     // add to cache
     this.nodeCache.set(objectId, slateNode);
@@ -100,6 +100,16 @@ export class CachedSlateTransformer {
         this.parentCache.set(attrObjectId, objectId);  
       }
     })
+
+    // re-connect the child nodes, in case parent moved
+    if (syncNode.object !== 'text' && syncNode.nodes) {
+      syncNode.nodes.forEach(child => {
+        const childId = this.getObjectId(child);
+        if (childId) {
+          this.parentCache.set(childId, objectId)
+        }
+      });
+    }
 
     return slateNode;
   };
@@ -142,6 +152,7 @@ export class CachedSlateTransformer {
     const invalidate = parentObjectIds.concat(objectIds);
     
     invalidate.forEach(objectId => {
+      console.log('invalidating', objectId, this.nodeCache.get(objectId));
       this.nodeCache.delete(objectId);
     })
 
